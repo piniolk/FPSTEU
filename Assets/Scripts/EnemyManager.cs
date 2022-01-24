@@ -18,8 +18,12 @@ public class EnemyManager : MonoBehaviour {
     public float attackAnimStartDelay;
     public float delayBetweenAttacks;
 
+    public AudioSource audioSource;
+    public AudioClip[] zombieSounds;
+
     // Start is called before the first frame update
     void Start() {
+        audioSource = GetComponent<AudioSource>();
         player = GameObject.FindGameObjectWithTag("Player");
         slider.maxValue = health;
         slider.value = health;
@@ -27,6 +31,11 @@ public class EnemyManager : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+        if (!audioSource.isPlaying) {
+            audioSource.clip = zombieSounds[Random.Range(0, zombieSounds.Length)];
+            audioSource.Play();
+        }
+
         slider.transform.LookAt(player.transform);
         GetComponent<NavMeshAgent>().destination = player.transform.position;
         if(GetComponent<NavMeshAgent>().velocity.magnitude > 1) {
@@ -49,6 +58,9 @@ public class EnemyManager : MonoBehaviour {
             enemyAnimator.SetTrigger("isDead");
             gameManager.enemiesAlive--;
             Destroy(gameObject, 10f);
+            Destroy(GetComponent<NavMeshAgent>());
+            Destroy(GetComponent<EnemyManager>());
+            Destroy(GetComponent<CapsuleCollider>());
         }
     }
 

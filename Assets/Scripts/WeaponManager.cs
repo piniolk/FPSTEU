@@ -10,9 +10,12 @@ public class WeaponManager : MonoBehaviour {
     public ParticleSystem muzzleFlash;
     public GameObject hitParticles;
 
+    public AudioClip gunShot;
+    public AudioSource audioSource;
+
     // Start is called before the first frame update
     void Start() {
-
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -29,6 +32,7 @@ public class WeaponManager : MonoBehaviour {
 
     void Shoot() {
         muzzleFlash.Play();
+        audioSource.PlayOneShot(gunShot);
         playerAnimator.SetBool("isShooting", true);
 
         RaycastHit hit;
